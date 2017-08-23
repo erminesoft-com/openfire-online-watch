@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin>
+    <class>com.erminesoft.OnlineWatch</class>
+    <name>Online watch info service</name>
+    <description>Information about online users.</description>
+    <author>Erminesoft LLC erminesoft.com</author>
+    <version>0.0.1</version>
+    <date>08/14/2017</date>
+    <minServerVersion>4.0.4</minServerVersion>
+    <licenseType>gpl</licenseType>
+
+    <adminconsole>
+        <tab id="tab-server">
+            <sidebar id="sidebar-server-settings">
+                <item id="online_watch-conf"
+                      name="Online watch properties"
+                      url="online_watch-conf.jsp"
+                      description="Allow admin to setup Redis host and port" />
+            </sidebar>
+        </tab>
+    </adminconsole>
+</plugin>

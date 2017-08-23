@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+    <title>Onlineservice Plugin Readme</title>
+    <style type="text/css">
+        BODY {
+            font-size: 100%;
+        }
+
+        BODY, TD, TH {
+            font-family: tahoma, verdana, arial, helvetica, sans-serif;
+            font-size: 0.8em;
+        }
+
+        H2 {
+            font-size: 10pt;
+            font-weight: bold;
+        }
+
+        A:hover {
+            text-decoration: none;
+        }
+
+        H1 {
+            font-family: tahoma, arial, helvetica, sans-serif;
+            font-size: 1.4em;
+            font-weight: bold;
+            border-bottom: 1px #ccc solid;
+            padding-bottom: 2px;
+        }
+
+        TT {
+            font-family: courier new;
+            font-weight: bold;
+            color: #060;
+        }
+
+        PRE {
+            font-family: courier new;
+            font-size: 100%;
+        }
+
+        #datatable TH {
+            color: #fff;
+            background-color: #2A448C;
+            text-align: left;
+        }
+
+        #datatable TD {
+            background-color: #FAF6EF;
+        }
+
+        #datatable .name {
+            background-color: #DCE2F5;
+        }
+
+        ul {
+            list-style: none;
+            width: 500px;
+        }
+
+        .custom_text {
+            width: 800px
+        }
+    </style>
+</head>
+<body>
+
+<h1>
+    Online Watch Plugin Readme
+</h1>
+
+<h2>Overview</h2>
+
+<p>
+    The Online Watch Plugin is a service that add/remove information about users online status into Redis.
+</p>
+
+<h2>Installation</h2>
+
+<p>Copy online_watch.jar into the plugins directory of your Openfire installation. The
+    plugin will then be automatically deployed.</p>
+
+<h2>Using the Plugin</h2>
+<p>
+<ol>
+    <li>After plugin was installed first time it use default settings (url - "localhost", port - "6379", namespace -
+        "ersto_users_online_").
+    </li>
+    <li>Admin can change that settings but plugin has to be reloaded manually.</li>
+    <li>Custom plugin settings could be found here server -> Server Settings -> Online watch properties.</li>
+</ol>
+</p>
+<h3>General workflow</h3>
+<p>
+
+
+<div class="custom_text">
+    The main plugin goal is to register when user become online. When user connect to Openfire,
+    Openfire creates new session for him when and in this moment new record in Redis
+    created. When session is closing the information about that user`s status deleted from Redis.
+    To speed up time for search user`s status in Redis key for every user is builded from two parts -
+    basic parts and first symbol of user name, see below "Key creation for Redis". For example four users with
+    names : ryangosling, bradpitt, ryanreynolds and emmastone enter to Openfire and new
+    new sessions were created.
+</div>
+<ul>
+    <li>Keys:</li>
+    <li>1) ryangosling - "ersto_users_online_r"</li>
+    <li>2) BradPitt - "ersto_users_online_b"</li>
+    <li>3) RyanReynolds - "ersto_users_online_r"</li>
+    <li>4) EmmaStone - "ersto_users_online_e"</li>
+</ul>
+<div class="custom_text">
+    As you can see two users have the same key, in this case under one key two different records will be created in
+    Redis.
+</div>
+<ul>
+    <li>Key -> ersto_users_online_r</li>
+    <li>record "ryangosling" - "1502699481463"</li>
+    <li>record "ryanreynolds" - "1502699481463"</li>
+    <li>Key -> ersto_users_online_b</li>
+    <li>record "created." - "1502699481463"</li>
+    <li>Key -> ersto_users_online_e</li>
+    <li>record "emmastone" - "1502699481463"</li>
+</ul>
+<div class="custom_text">
+    Also when plugin starts in first time then it search for all online users and save information abouts their status
+    to Redis. When plugin is removing from Openfire than all information that were saved to Redis will be deleted.
+</div>
+
+<h3>Key creation for Redis</h3>
+<div class="custom_text">
+    Key creates from two parts: basic part is namespace ("ersto_users_online_") and first symbol of username,
+    e.g. basic part is "ersto_users_online_" and username is "newOpenfireUser" than key will be -
+    "ersto_users_online_n".
+</div>
+<h3>Datastructure in Redis to store users` statuses</h3>
+<div class="custom_text">
+    To store information about users statuses <b>Hash</b> is used.
+    For example user with name "newopenfireuser" enter to Openfire, new session creaets for that user,
+    then plugin creates key "ersto_users_online_n". Ander that key information about user`s session creation timestamp
+    saved in hash:
+    key - "newopenfireuser"
+    timestamp - "1502699481463"
+</div>
+</body>
+</html>
